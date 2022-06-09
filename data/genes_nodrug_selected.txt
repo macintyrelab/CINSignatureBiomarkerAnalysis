@@ -1,0 +1,53 @@
+genes	signature	GroupGenes
+1	ANAPC4	CX5	Cell cycle checkpoints
+2	BUB1B	CX9	Cell cycle checkpoints
+3	SGSM3	CX2	Cell cycle checkpoints
+4	RCC1	CX4	Chromatin architecture
+5	SGO1	CX2	Chromatin architecture
+6	SGO1	CX5	Chromatin architecture
+7	SPEN	CX6	Chromatin architecture
+8	UBR4	CX4	Chromatin architecture
+9	ANLN	CX9	Cytoeskeletal estructure
+10	ARPC2	CX9	Cytoeskeletal estructure
+11	CORO6	CX11	Cytoeskeletal estructure
+12	DNM1L	CX4	Cytoeskeletal estructure
+13	IQGAP3	CX1	Cytoeskeletal estructure
+14	MYH3	CX1	Cytoeskeletal estructure
+15	NCKAP1	CX9	Cytoeskeletal estructure
+16	RACK1	CX1	Cytoeskeletal estructure
+17	STARD9	CX11	Cytoeskeletal estructure
+18	TMEM170A	CX5	Cytoeskeletal estructure
+19	TUBG1	CX5	Cytoeskeletal estructure
+20	RPS3	CX1	DNA repair
+21	COPS2	CX5	DNA repair (NER)
+22	COPS4	CX4	DNA repair (NER)
+23	KDM3B	CX6	Histone modification
+24	NPAT	CX1	Histone modification
+25	PCGF6	CX5	Histone modification
+26	ATAD5	CX11	DNA damage and replication stress
+27	ATG5	CX6	DNA damage and replication stress
+28	BCAR3	CX9	DNA damage and replication stress
+29	BIRC6	CX2	DNA damage and replication stress
+30	BIRC6	CX5	DNA damage and replication stress
+31	DOCK9	CX1	DNA damage and replication stress
+32	FAM129B	CX4	DNA damage and replication stress
+33	FUBP1	CX9	DNA damage and replication stress
+34	GNL2	CX11	DNA damage and replication stress
+35	HGS	CX9	DNA damage and replication stress
+36	HSPH1	CX5	DNA damage and replication stress
+37	LIFR	CX2	DNA damage and replication stress
+38	PSMC5	CX2	DNA damage and replication stress
+39	PSMD13	CX2	DNA damage and replication stress
+40	PSMD13	CX4	DNA damage and replication stress
+41	SHCBP1	CX11	DNA damage and replication stress
+42	SPDYA	CX9	DNA damage and replication stress
+43	TRIP12	CX2	DNA damage and replication stress
+44	UBAP1	CX11	DNA damage and replication stress
+45	CYB5R4	CX1	ROS stress response
+46	DUSP10	CX4	ROS stress response
+47	RDH13	CX6	ROS stress response
+48	WDR26	CX9	ROS stress response
+49	ARHGAP23	CX13	Rho GTPase
+50	FAM13A	CX4	Rho GTPase
+51	ACTL6A	CX1	SWI/SNF
+52	TERF1	CX1	Telomere maintenance

@@ -1,0 +1,88 @@
+signature	moa	drug	Analysis	group_moa
+1	CX4	adenosine receptor antagonist	CGS-15943	CRISPR	Neurotransmission inhibitor
+2	CX9	ALK tyrosine kinase receptor inhibitor	AP26113	Combined	ALK tyrosine kinase receptor inhibitor
+3	CX5	protein synthesis inhibitor	puromycin	CRISPR	Anti-infective agent
+4	CX7	protein synthesis inhibitor	puromycin	CRISPR	Anti-infective agent
+5	CX7	carbonic anhydrase inhibitor	sulfanilamide	RNAi	Anti-infective agent
+6	CX7	non-nucleoside reverse transcriptase inhibitor	dapivirine	RNAi	Anti-infective agent
+7	CX9	caspase activator	PETCM	RNAi	Apoptotic agent
+8	CX7	inosine monophosphate dehydrogenase inhibitor	AVN-944	RNAi	Apoptotic agent
+9	CX7	aspartic protease inhibitor	pepstatin	Combined	Aspartic protease inhibitor
+10	CX7	Abl kinase inhibitor, Aurora kinase inhibitor, FLT3 inhibitor	KW-2449	RNAi	Aurora kinase inhibitor
+11	CX7	Aurora kinase inhibitor	alisertib	RNAi	Aurora kinase inhibitor
+12	CX7	Aurora kinase inhibitor	GSK1070916	RNAi	Aurora kinase inhibitor
+13	CX4	CDK inhibitor	arcyriaflavin-a	Combined	CDK inhibitor
+14	CX13	CDK inhibitor	arcyriaflavin-a	Combined	CDK inhibitor
+15	CX7	DNA synthesis inhibitor	anisomycin	CRISPR	DNA synthesis inhibitor
+16	CX7	dehydrogenase inhibitor	azathioprine	RNAi	DNA synthesis inhibitor
+17	CX7	dihydroorotate dehydrogenase inhibitor	brequinar	RNAi	DNA synthesis inhibitor
+18	CX7	immunosuppressant, protein synthesis inhibitor, purine antagonist	mercaptopurine	RNAi	DNA synthesis inhibitor
+19	CX9	EGFR inhibitor	afatinib	Combined	EGFR inhibitor
+20	CX7	FLT3 inhibitor	quizartinib	RNAi	FLT3 inhibitor
+21	CX4	guanylate cyclase stimulant	riociguat	RNAi	Guanylate cyclase stimulant
+22	CX17	HDAC inhibitor	JNJ-26481585	CRISPR	HDAC inhibitor
+23	CX5	HDAC inhibitor	givinostat	RNAi	HDAC inhibitor
+24	CX4	glutamate receptor antagonist	kynurenic-acid	RNAi	Immunosuppressant
+25	CX2	JAK inhibitor	AZD1480	Combined	JAK inhibitor
+26	CX4	JAK inhibitor	AZD1480	Combined	JAK inhibitor
+27	CX5	JAK inhibitor	ruxolitinib	CRISPR	JAK inhibitor
+28	CX9	JAK inhibitor	filgotinib	CRISPR	JAK inhibitor
+29	CX5	JAK inhibitor	AZD1480	RNAi	JAK inhibitor
+30	CX11	KIT inhibitor, PDGFR tyrosine kinase receptor inhibitor, src inhibitor	masitinib	Combined	KIT inhibitor
+31	CX5	KIT inhibitor, PDGFR tyrosine kinase receptor inhibitor, src inhibitor	masitinib	RNAi	KIT inhibitor
+32	CX5	KIT inhibitor, PDGFR tyrosine kinase receptor inhibitor, VEGFR inhibitor	pazopanib	RNAi	KIT inhibitor
+33	CX7	KIT inhibitor, PDGFR tyrosine kinase receptor inhibitor, VEGFR inhibitor	pazopanib	RNAi	KIT inhibitor
+34	CX7	KIT inhibitor, VEGFR inhibitor	cediranib	RNAi	KIT inhibitor
+35	CX9	MET inhibitor	LY2801653	RNAi	MET inhibitor
+36	CX5	hypoxia inducible factor inhibitor	2-methoxyestradiol	RNAi	Microtubule disrupting agent
+37	CX5	tubulin polymerization inhibitor	mebendazole	CRISPR	Microtubule inhibitor
+38	CX7	microtubule inhibitor	colchicine	CRISPR	Microtubule inhibitor
+39	CX7	tubulin polymerization inhibitor	docetaxel	CRISPR	Microtubule inhibitor
+40	CX7	tubulin polymerization inhibitor	vinorelbine	CRISPR	Microtubule inhibitor
+41	CX5	microtubule inhibitor	colchicine	Combined	Microtubule inhibitor
+42	CX5	tubulin polymerization inhibitor	paclitaxel	Combined	Microtubule inhibitor
+43	CX3	microtubule inhibitor	cabazitaxel	RNAi	Microtubule inhibitor
+44	CX5	tubulin polymerization inhibitor	vinorelbine	RNAi	Microtubule inhibitor
+45	CX3	tubulin polymerization inhibitor	paclitaxel	Combined	Microtubule inhibitor 
+46	CX9	microtubule stabilizing agent, tubulin polymerization inhibitor	epothilone-d	Combined	Microtubule stabilizing agent
+47	CX7	microtubule stabilizing agent	ixabepilone	CRISPR	Microtubule stabilizing agent
+48	CX7	microtubule stabilizing agent, tubulin polymerization inhibitor	epothilone-b	CRISPR	Microtubule stabilizing agent
+49	CX3	microtubule stabilizing agent	ixabepilone	Combined	Microtubule stabilizing agent
+50	CX9	EGFR inhibitor, RET tyrosine kinase inhibitor, VEGFR inhibitor	vandetanib	Combined	Multikinase inhibition
+51	CX15	Bcr-Abl kinase inhibitor, FLT3 inhibitor, PDGFR tyrosine kinase receptor inhibitor	ponatinib	CRISPR	Multikinase inhibition
+52	CX15	FGFR inhibitor, KIT inhibitor, PDGFR tyrosine kinase receptor inhibitor, RAF inhibitor, RET tyrosine kinase inhibitor, VEGFR inhibitor	regorafenib	CRISPR	Multikinase inhibition
+53	CX15	RAF inhibitor, VEGFR inhibitor	RAF265	CRISPR	Multikinase inhibition
+54	CX7	EGFR inhibitor, RET tyrosine kinase inhibitor, VEGFR inhibitor	vandetanib	Combined	Multikinase inhibition
+55	CX5	Bcr-Abl kinase inhibitor, KIT inhibitor, PDGFR tyrosine kinase receptor inhibitor	imatinib	RNAi	Multikinase inhibition
+56	CX5	FLT3 inhibitor, KIT inhibitor, PDGFR tyrosine kinase receptor inhibitor, RET tyrosine kinase inhibitor, VEGFR inhibitor	sunitinib	RNAi	Multikinase inhibition
+57	CX10	Bcr-Abl kinase inhibitor, ephrin inhibitor, KIT inhibitor, PDGFR tyrosine kinase receptor inhibitor, src inhibitor, tyrosine kinase inhibitor	dasatinib	RNAi	Multikinase inhibition
+58	CX7	Aurora kinase inhibitor, Bcr-Abl kinase inhibitor, FLT3 inhibitor, JAK inhibitor	tozasertib	RNAi	Multikinase inhibition
+59	CX7	Aurora kinase inhibitor, FLT3 inhibitor, VEGFR inhibitor	ENMD-2076	RNAi	Multikinase inhibition
+60	CX7	Aurora kinase inhibitor, growth factor receptor inhibitor	danusertib	RNAi	Multikinase inhibition
+61	CX7	Aurora kinase inhibitor, JAK inhibitor	AT-9283	RNAi	Multikinase inhibition
+62	CX7	FGFR inhibitor, KIT inhibitor, PDGFR tyrosine kinase receptor inhibitor, RAF inhibitor, RET tyrosine kinase inhibitor, VEGFR inhibitor	regorafenib	RNAi	Multikinase inhibition
+63	CX7	FGFR inhibitor, VEGFR inhibitor	PD-173074	RNAi	Multikinase inhibition
+64	CX5	beta amyloid protein neurotoxicity inhibitor	salidroside	RNAi	Neuroprotective agent
+65	CX5	adrenergic receptor agonist, neurotransmitter	epinephrine	Combined	Neurotransmission inhibitor
+66	CX7	serotonin receptor antagonist	SB-216641	Combined	Neurotransmission inhibitor
+67	CX3	GABA receptor antagonist	thiocolchicoside	RNAi	Neurotransmission inhibitor
+68	CX5	adrenergic receptor agonist	methyldopa	RNAi	Neurotransmission inhibitor
+69	CX5	norepinephrine reputake inhibitor, tricyclic antidepressant	maprotiline	RNAi	Neurotransmission inhibitor
+70	CX7	dopamine receptor antagonist, serotonin receptor antagonist	paliperidone	RNAi	Neurotransmission inhibitor
+71	CX14	dopamine receptor antagonist, serotonin receptor antagonist	sertindole	RNAi	Neurotransmission inhibitor
+72	CX7	nitric oxide synthase inhibitor	diphenyleneiodonium	RNAi	Nitric oxide synthase inhibitor
+73	CX5	PARP inhibitor	olaparib	RNAi	PARP inhibitor
+74	CX7	PARP inhibitor	PJ-34	RNAi	PARP inhibitor
+75	CX11	PDGFR tyrosine kinase receptor inhibitor	crenolanib	Combined	PDGFR tyrosine kinase receptor inhibitor
+76	CX7	PDGFR tyrosine kinase receptor inhibitor, VEGFR inhibitor	linifanib	CRISPR	PDGFR tyrosine kinase receptor inhibitor
+77	CX5	PDGFR tyrosine kinase receptor inhibitor	crenolanib	RNAi	PDGFR tyrosine kinase receptor inhibitor
+78	CX7	PDGFR tyrosine kinase receptor inhibitor	crenolanib	RNAi	PDGFR tyrosine kinase receptor inhibitor
+79	CX9	PI3K inhibitor	taselisib	Combined	PI3K inhibitor
+80	CX3	PKC activator	ingenol-mebutate	RNAi	PKC activator
+81	CX9	PKC activator	ingenol-mebutate	RNAi	PKC activator
+82	CX15	PKC inhibitor	bisindolylmaleimide-ix	CRISPR	PKC inhibitor
+83	CX4	progesterone receptor antagonist	gestrinone	RNAi	Progesterone receptor antagonist
+84	CX1	RAF inhibitor	AZ-628	Combined	RAF inhibitor
+85	CX15	RAF inhibitor	AZ-628	CRISPR	RAF inhibitor
+86	CX14	RAF inhibitor	AZ-628	RNAi	RAF inhibitor
+87	CX7	VEGFR inhibitor	tivozanib	RNAi	VEGFR inhibitor

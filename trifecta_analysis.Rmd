@@ -1,0 +1,280 @@
+---
+title: "Trifecta of CRISPR, RNAi and drug screen analysis"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+library(dplyr)
+library(ggplot2)
+library(ppcor)
+
+#PATHS
+BASE=dirname(rstudioapi::getSourceEditorContext()$path)
+
+#function for correlating drug response data
+corDrugResponse<-function(hit_list,tau_thresh)
+{
+response<-c()
+for(i in 1:nrow(hit_list))
+{
+  gname<-strsplit(hit_list$gene[i],"\\.")[[1]][1]
+  drugs<-drug_lookup[drug_lookup$target==gname,"drug"]
+  sig<-hit_list$signature[i]
+  for(d in drugs)
+  {
+    pdat<-left_join(drug_screen[drug_screen$name==d,],
+                    data.frame(depmap_id=rownames(cell_exp_filt_drug),cell_exp_filt_drug),
+                    by="depmap_id")
+    pdat<-left_join(pdat,cell_line_info,by="depmap_id")
+    pdat<-pdat[pdat$passed_str_profiling.y==T,]
+    pdat<-pdat[!is.na(pdat[,paste0("CX",sig)]),]
+    res<-cor.test(pdat[,"auc"],pdat[,paste0("CX",sig)],method="k",alternative = "less")
+    if(res$estimate< tau_thresh)
+    {
+      response<-rbind(response,c(sig,gname,d,res$estimate,res$p.value))
+    }
+  }
+}
+
+colnames(response)<-c("signature","target","drug","tau","p.value")
+response<-cbind(response,q.value=p.adjust(response[,5],method="BH"))
+response<-data.frame(response,stringsAsFactors = F)
+response<-response[order(response$signature,response$q.value),]
+response
+}
+```
+
+##Load cell line signature exposures
+```{r}
+#load signature exposures
+cell_exp<-readRDS(paste0(BASE,"/data/4_TCGA_PCAWG_Exposures_to_TCGA_Signatures_NewASCAT_NewCXnames_cellLines_penalty70.rds"))
+
+#shrink low exposures to zero
+thresh<-read.table(paste0(BASE,"/data/3_Boxplots_per_sig_fullTCGA_1000sims_10pGaussian_10pSamplePoisson_NewCXnames.txt"),sep="\t",header=T)
+cell_exp_binary<-t(apply(cell_exp,1,function(x){x<thresh[,4]}))
+cell_exp[cell_exp_binary]<-0
+
+#load identifier mapping file
+cell_id_mapping<-read.table(paste0(BASE,"/data/cellLine_CEL_file_mapping.tsv"),sep="\t",header=T,stringsAsFactors=F)
+rownames(cell_exp)<-cell_id_mapping[match(rownames(cell_exp),cell_id_mapping[cell_id_mapping$study=="CCLE","fileid"]),"cellid"]
+
+#remove duplicate entries
+#cell_exp<-cell_exp[rev(rownames(cell_exp)),]
+cell_exp<-cell_exp[!duplicated(rownames(cell_exp)),]
+
+samp_info<-read.csv(paste0(BASE,"/data/sample_info.csv"),header=T)
+rownames(cell_exp)<-samp_info[unlist(sapply(rownames(cell_exp),function(x){grep(x,samp_info$cell_line_name,ignore.case = T)[1]})),1]
+cell_exp<-cell_exp[!is.na(rownames(cell_exp)),]
+cell_exp<-cell_exp[!duplicated(rownames(cell_exp)),]
+
+print("Total number of cell lines with signature activities:")
+nrow(cell_exp)
+```
+##Load high-throughput drug screen data
+```{r}
+#load drug screen data & sample info --> download from https://depmap.org/repurposing/
+drug_screen<-read.csv(paste0(BASE,"/data/secondary-screen-dose-response-curve-parameters.csv"),stringsAsFactors = F)
+drug_screen<-drug_screen[drug_screen$screen_id=="HTS002",]
+cell_line_info<-read.csv(paste0(BASE,"/data/secondary-screen-cell-line-info.csv"))
+cell_exp_filt_drug<-cell_exp[rownames(cell_exp)%in%drug_screen$depmap_id,]
+
+drug_lookup<-c()
+unique_target<-unique(drug_screen[,c("name","target")])
+for(i in 1:nrow(unique_target))
+{
+  drug<-unique_target[i,"name"]
+  targets<-unlist(strsplit(unique_target[i,"target"],", "))
+  drug_lookup<-rbind(drug_lookup,cbind(drug,targets))
+}
+
+drug_lookup<-unique(drug_lookup)
+drug_lookup<-data.frame(drug_lookup)
+colnames(drug_lookup)<-c("drug","target")
+drug_lookup<-drug_lookup[!is.na(drug_lookup$target),]
+
+print("Number of cell lines with drug response data:")
+nrow(cell_exp_filt_drug)
+```
+
+##Load CRISPR screen data
+```{r}
+#load crispr knockout data --> download from https://depmap.org/portal/download/
+gene_effect<-read.csv(paste0(BASE,"/data/CRISPR_gene_effect.csv"),row.names = 1)
+
+#filter to matching cell line data between KO and exposures
+cell_exp_filt_KO<-cell_exp[rownames(cell_exp)%in%rownames(gene_effect),]
+cell_exp_binary_filt_KO<-cell_exp_binary[rownames(cell_exp_binary)%in%rownames(gene_effect),]
+gene_effect_filt<-gene_effect[match(rownames(cell_exp_filt_KO),rownames(gene_effect)),]
+print("Total number of cell lines with signatures and CRISPR screen data:")
+nrow(gene_effect_filt)
+```
+
+##Load RNAi screen data
+```{r}
+#load rnai knockdown data --> download from https://depmap.org/portal/download/
+gene_knockdown<-read.csv(paste0(BASE,"/data/D2_combined_gene_dep_scores.csv"),row.names = 1,header=F,stringsAsFactors = F)
+knockdown_samp_info<-read.csv(paste0(BASE,"/data/DEMETER_sample_info.csv"))
+colnames(gene_knockdown)<-samp_info[match(gene_knockdown[1,],samp_info[,4]),1]
+gene_knockdown<-t(gene_knockdown[-1,])
+gene_knockdown<-data.frame(gene_knockdown[!is.na(rownames(gene_knockdown)),],stringsAsFactors = F)
+
+#filter to matching cell line data between KO and exposures
+cell_exp_filt_KD<-cell_exp[rownames(cell_exp)%in%rownames(gene_knockdown),]
+gene_knockdown_filt<-gene_knockdown[match(rownames(cell_exp_filt_KD),rownames(gene_knockdown)),]
+print("Total number of cell lines with signatures and RNAi screen data:")
+nrow(gene_effect_filt)
+```
+
+#Analysis
+##Correlation between CRISPR gene essentiality score and signature activity
+```{r}
+results_cor<-c()
+for(j in 1:ncol(cell_exp_filt_KO))
+{
+  res_sig<-c()
+  for(i in 1:ncol(gene_effect_filt))
+  {
+    res<-cor.test(gene_effect_filt[,i],cell_exp_filt_KO[,j],method="k",alternative = "less")
+      if(res$estimate< -0.07)
+      {
+        res_sig<-rbind(res_sig,c(j,colnames(gene_effect_filt)[i],
+                               res$estimate,res$p.value))
+      }
+  }
+  res_sig<-data.frame(res_sig,stringsAsFactors = F)
+  res_sig<-cbind(res_sig,q.value=p.adjust(res_sig[,4],method="BH"))
+  results_cor<-rbind(results_cor,res_sig)
+}
+
+colnames(results_cor)<-c("signature","gene","rho","p.value","q.value")
+results_cor<-data.frame(results_cor,stringsAsFactors = F)
+results_cor<-results_cor[order(results_cor$signature,results_cor$q.value),]
+results_cor_filt<-results_cor[results_cor$q.value<0.05,]
+print("Number of significant hits for CRISPR screen:")
+table(results_cor_filt$signature)
+length(unique(results_cor_filt$gene))
+```
+
+# CRISPR correlated with drug response of target matched compound
+```{r}
+KO_drug_response<-corDrugResponse(results_cor_filt,-0.1)
+KO_drug_response_qval<-KO_drug_response[KO_drug_response$q.value<0.01,] #38 sign hits
+table(KO_drug_response_qval$signature)
+```
+
+#Correlation between RNAi gene essentiality score and signature activity
+```{r warning=F, cache=T}
+results_kd<-c()
+for(j in 1:ncol(cell_exp_filt_KD))
+{
+  res_sig<-c()
+  for(i in 1:ncol(gene_knockdown_filt))
+  {
+    res<-cor.test(as.numeric(gene_knockdown_filt[,i]),cell_exp_filt_KD[,j],method="k",alternative = "less")
+    if(res$estimate< -0.07)
+    {
+      res_sig<-rbind(res_sig,c(j,colnames(gene_knockdown_filt)[i],
+                                       res$estimate,res$p.value))
+    }
+  }
+  res_sig<-data.frame(res_sig,stringsAsFactors = F)
+  res_sig<-cbind(res_sig,q.value=p.adjust(res_sig[,4],method="BH"))
+  results_kd<-rbind(results_kd,res_sig)
+}
+
+colnames(results_kd)<-c("signature","gene","rho","p.value","q.value")
+results_kd<-data.frame(results_kd,stringsAsFactors = F)
+results_kd<-results_kd[order(results_kd$signature,results_kd$q.value),]
+results_kd_filt<-results_kd[results_kd$q.value<0.05,]
+print("Number of significant hits for RNAi screen:")
+table(results_kd_filt$signature)
+length(unique(results_kd_filt$gene))
+```
+
+# RNAi correlated with drug response of target matched compound
+```{r}
+KD_drug_response<-corDrugResponse(results_kd_filt,-0.1)
+KD_drug_response_qval<-KD_drug_response[KD_drug_response$q.value<0.01,] #76 sign hits
+table(KD_drug_response_qval$signature)
+```
+
+##Combined results
+```{r}
+comb_res<-inner_join(results_cor_filt,results_kd_filt,by=c("signature","gene"))
+print("Number of hits with support from both CRISPR and RNAi screen:")
+table(comb_res$signature)
+```
+
+#Filter combined hits for significant overlaps
+```{r}
+total_genes<-sum(colnames(gene_knockdown_filt)%in%colnames(gene_effect_filt))
+res<-c()
+for(s in unique(comb_res$signature))
+{
+  KD_hits<-sum(results_kd_filt[results_kd_filt$signature==s,"gene"]%in%colnames(gene_effect_filt))
+  KO_hits<-sum(results_cor_filt[results_cor_filt$signature==s,"gene"]%in%colnames(gene_knockdown_filt))
+  overlap<-nrow(comb_res[comb_res$signature==s,])
+  p<-phyper(overlap-1,KD_hits,total_genes-KD_hits,KO_hits,lower.tail = FALSE)
+  res<-rbind(res,c(s,p))
+}
+res<-data.frame(as.matrix(res),stringsAsFactors = F)
+colnames(res)<-c("signature","pvalue")
+comb_res_filt<-comb_res[comb_res$signature%in%res[res$pvalue<0.05,"signature"],]
+table(comb_res_filt$signature)
+```
+
+#Combined CRISPR and RNAi correlated with drug response of target matched compound
+```{r}
+comb_drug_response<-corDrugResponse(comb_res_filt,-0.07)
+comb_drug_response_qval<-comb_drug_response[comb_drug_response$q.value<0.1,]
+```
+
+#Combined CRISPR and RNAi not correlated with drug response of target matched compound
+```{r}
+noresponse<-c()
+for(i in 1:nrow(comb_res_filt))
+{
+  gname<-strsplit(comb_res_filt$gene[i],"\\.")[[1]][1]
+  drugs<-drug_lookup[drug_lookup$target==gname,"drug"]
+  sig<-comb_res_filt$signature[i]
+  for(d in drugs)
+  {
+    pdat<-left_join(drug_screen[drug_screen$name==d,],
+                    data.frame(depmap_id=rownames(cell_exp_filt_drug),cell_exp_filt_drug),
+                    by="depmap_id")
+    pdat<-left_join(pdat,cell_line_info,by="depmap_id")
+    pdat<-pdat[pdat$passed_str_profiling.y==T,]
+    pdat<-pdat[!is.na(pdat[,paste0("CX",sig)]),]
+    res<-cor.test(pdat[,"auc"],pdat[,paste0("CX",sig)],method="k",alternative = "less")
+    if(res$estimate >= -0.07)
+    {
+      noresponse<-rbind(noresponse,c(sig,gname,d,res$estimate,res$p.value))
+    }
+  }
+}
+
+colnames(noresponse)<-c("signature","target","drug","tau","p.value")
+noresponse<-data.frame(noresponse,stringsAsFactors = F)
+comb_drug_noresponse<-noresponse[order(noresponse$signature),] #209
+table(comb_drug_noresponse$signature)
+```
+
+#Save results of the analyses
+```{r}
+write.table(KO_drug_response_qval, file=paste0(BASE,"/data/KO_drug_response_qval.txt"), sep="\t", row.names=F)
+write.table(KD_drug_response_qval, file=paste0(BASE,"/data/KD_drug_response_qval.txt"), sep="\t", row.names=F)
+write.table(comb_drug_response_qval, file=paste0(BASE,"/data/comb_drug_response_qval.txt"), sep="\t", row.names=F)
+```
+
+#Reduce list of biomarkers with non-significant drug
+```{r}
+target<-unique(drug_screen[,c("target")])
+target<-unique(unlist(strsplit(target,", ")))
+genes<-unique(sapply(strsplit(comb_res_filt$gene,"\\."),"[[",1))
+
+nodrug_genes <- as.data.frame(genes[!genes %in% target]) #279
+colnames(nodrug_genes)[1]<-"genes"
+write.table(nodrug_genes, file=paste0(BASE,"/data/genes_nodrug.txt"), sep="\t", row.names=F, quote=F)
+```
